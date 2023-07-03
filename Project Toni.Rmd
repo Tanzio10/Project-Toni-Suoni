@@ -1,6 +1,6 @@
 ## Grafici
 install.packages("readxl")
-install.packages("Rcpp"")
+install.packages("Rcpp")
 install.packages("ggplot2")
 install.packages("gridExtra")
 library(readxl)
@@ -8,6 +8,27 @@ library(Rcpp)
 library(ggplot2)
 library(gridExtra)
 library(grid)
+
+Fatturato <- read_excel("D:/Data Science/Progetto/Data/Fatturato.xlsx", 
+    sheet = "2019-2023")
+FattCatt <- read_excel("D:/Data Science/Progetto/Data/FattCattPezz.xlsx", 
+    sheet = "tab2 fatturato")
+CattPezz <- read_excel("D:/Data Science/Progetto/Data/FattCattPezz.xlsx", 
+    sheet = "tab3 pezzi")
+TotSum <- read_excel("D:/Data Science/Progetto/Data/tabella 8.xlsx", 
+    sheet = "tab1 tutto")
+BP2019 <- read_excel("D:/Data Science/Progetto/Data/Boxplot1.xlsx", 
+    sheet = "2019")
+BP2020 <- read_excel("D:/Data Science/Progetto/Data/Boxplot1.xlsx", 
+    sheet = "2020")
+BP2021 <- read_excel("D:/Data Science/Progetto/Data/Boxplot1.xlsx", 
+    sheet = "2021")
+BP2022 <- read_excel("D:/Data Science/Progetto/Data/Boxplot1.xlsx", 
+    sheet = "2022")
+BP2023 <- read_excel("D:/Data Science/Progetto/Data/Boxplot1.xlsx", 
+    sheet = "2023")
+BPTOT <- read_excel("D:/Data Science/Progetto/Data/Boxplot1.xlsx", 
+    sheet = "2019-2023")
 
 Mesi <- c("Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio","Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre")
 Ddn <- c(6133.42, 5686.50, 6477.32, 3672.00, 5481.50, 6336.50, 3812.50, 776.50, 5165.50, 8903.50, 6437.50, 12396.00)
