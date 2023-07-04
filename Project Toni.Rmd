@@ -3,11 +3,13 @@ install.packages("readxl")
 install.packages("Rcpp")
 install.packages("ggplot2")
 install.packages("gridExtra")
+install.packages("gridtext")
 library(readxl)
 library(Rcpp)
 library(ggplot2)
 library(gridExtra)
 library(grid)
+library(gridtext)
 
 Fatturato <- read_excel("D:/Data Science/Progetto/Data/Fatturato.xlsx", 
     sheet = "2019-2023")
@@ -38,7 +40,6 @@ Dvd <- c(4922.50, 5388.00, 5279.00, 2549.00, 5995.75, 4496.00, 3666.00, 1583.00,
 Dvt <- c(6196.00, 6218.00, 4661.50, 4394.00, 3441.00, -10000, -10000, -10000, -10000, -10000, -10000, -10000)
 IA <- data.frame(Mesi, Ddn, Dv, Dvu, Dvd, Dvt)
 print(IA)
-
 ListaMesi <- c("Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre")
 
 str(Fatturato)
@@ -75,7 +76,7 @@ plot5 <- ggplot(BP2023, aes(x=Mese, y=Importo)) +
     geom_boxplot(fill="slateblue", alpha=0.2) + 
     xlab("2023") + coord_cartesian(ylim=c(0,40)) +
     scale_x_discrete(limits=ListaMesi)
-grid.arrange(plot1, plot2, plot3, plot4, plot5, nrow=5, top = textGrob("Mediana degli Importi per Vendita raggruppati Mensilmente",gp=gpar(fontsize=20))) 
+grid.arrange(plot1, plot2, plot3, plot4, plot5, nrow=5, top="Mediana degli Importi per Vendita raggruppati Mensilmente") 
 
 #Columnplot diviso per anni
 plot1 <- ggplot(BP2019, aes(x=Mese, y=Importo)) + 
