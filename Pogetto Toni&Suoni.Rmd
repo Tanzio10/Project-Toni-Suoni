@@ -1,60 +1,85 @@
 ---
 title: "Project Toni&Suoni"
 author: "Fabio Massimo Lattanzio"
-date: "`r Sys.Date()`"
+date: "14 Luglio 2023"
 output:
   ioslides_presentation: default
   powerpoint_presentation: default
 ---
 
-##     INTRODUZIONE 
+## Introduzione
 
-In questo progetto verrà sviluppata l’analisi dei dati di vendita di un piccolo negozio di strumenti musicali, situato all’interno di una scuola di musica. 
-Il negozio nasce alla fine del 2018 e, oltre alla vendita di strumenti musicali e di tutti i relativi accessori, vende libri musicali e fornisce servizi di liuteria. 
+In questo progetto verrà sviluppata l'analisi dei dati di vendita di un piccolo negozio di strumenti musicali, situato all'interno di una scuola di musica. Il negozio nasce alla fine del 2018 e, oltre alla vendita di strumenti musicali e di tutti i relativi accessori, vende libri musicali e fornisce servizi di liuteria.
 
-Il progetto si focalizzerà sull’andamento delle vendite dal gennaio 2019 al maggio 2023, con focus su: 
+Il progetto si focalizzerà sull'andamento delle vendite dal gennaio 2019 al maggio 2023, considerando:
 
-  * Andamento delle vendite per anno 
-  * Stagionalità delle vendite 
-  * Andamento delle vendite per CATEGORIA  
-
+-   Andamento delle vendite per anno
+-   Stagionalità delle vendite
+-   Andamento delle vendite per Categoria
 
 ## Analisi del Dataset
 
-Per l’analisi svolta è stato estratto il dataset “Fatturato”(Vendite da gennaio 2019 a maggio 2023) dal programma di gestione del negozio MaestroGold. 
+Per svolgere l'analisi è stato estratto il dataset "Fatturato"(Vendite da gennaio 2019 a maggio 2023) dal programma di gestione del negozio MaestroGold.
 
-Il dataset Fatturato contiene quantità e prezzo degli articoli venduti giornalmente distinti per categoria. 
-Le dimensioni del dataset sono: 8819 righe (osservazioni)  
-Su questi dati sono state effettuate le seguenti analisi: 
+Il dataset Fatturato contiene quantità e prezzo degli articoli venduti giornalmente su 8819 righe.
+   
+Gli articoli sono stati classificati in 5 categorie di apparteneza.
+   
+Su questi dati sono state effettuate le seguenti analisi:
 
- * Descrittiva Univariata (Quantità e Importo per Vendita) 
- * Descrittiva Bivariata (Comparazione Importi per Categoria Nel Tempo) 
+* Descrittiva Univariata (Quantità e Importo)
+* Comparazione tra categorie
+* Andamento degli importi negli anni
 
-## Istogramma e QQplot Q.tà
+## Analisi Descrittiva Univariata
+### Indici di Posizione
+
+Sono state effettuate le analisi descrittive delle variabili: Quantità e Importo sono variabili quantitative è possibile calcolarne gli indici di posizione.
+
+Quantità
+```{r echo=FALSE}
+library(readxl)
+Fatturato <- read_excel("D:/Data Science/Progetto/Data/Fatturato.xlsx", 
+    sheet = "2019-2023")
+summary(Fatturato$Q.tà)
+```
+Importo
+```{r echo=FALSE}
+library(readxl)
+Fatturato <- read_excel("D:/Data Science/Progetto/Data/Fatturato.xlsx", 
+    sheet = "2019-2023")
+summary(Fatturato$Importo)
+```
+
+## Istogramma Quantità
 
 ```{r echo=FALSE}
 library(readxl)
 Fatturato <- read_excel("D:/Data Science/Progetto/Data/Fatturato.xlsx", 
     sheet = "2019-2023")
+Imp200 <- Fatturato[which(Fatturato$Importo <= 100),]
+Imp35 <- Fatturato[which(Fatturato$Q.tà <= 5),]
 par(mfrow=c(1,2))
-hist(Fatturato$Q.tà, main="Istogramma Q.tà", xlab="N°Articoli per Vendita", ylab="N°Vendite")
-qqnorm(Fatturato$Q.tà, main="Q-Q Plot Q.tà", ylab="N°Articoli per Vendità", xlab="Quantili")
+hist(Fatturato$Q.tà, main="Istogramma Quantità", xlab="N°Articoli per Vendita", ylab="N°Vendite")
+hist(Imp35$Q.tà, main="Istogramma Quantità", xlab="N°Articoli per Vendita", ylab="N°Vendite")
 ```
+L'istogramma di frequenza mostra che la variabile Quantità non assume la determinazione di una normale.
 
-## Istogramma e QQplot Importo
+## Istogramma Importo
 
 ```{r echo=FALSE}
 library(readxl)
 Fatturato <- read_excel("D:/Data Science/Progetto/Data/Fatturato.xlsx", 
     sheet = "2019-2023")
+Imp200 <- Fatturato[which(Fatturato$Importo <= 150),]
+Imp35 <- Fatturato[which(Fatturato$Q.tà <= 5),]
 par(mfrow=c(1,2))
-hist(Fatturato$Importo, main="Istogramma Importo",ylab="N°Vendite", xlab="Importo per Vendità in Euro")
-qqnorm(Fatturato$Importo, main="Q-Q Plot Importo", ylab="Importo per Vendità in Euro", xlab="Quantili")
+hist(Fatturato$Importo, main="Istogramma Importo",ylab="N°Vendite", xlab="Incasso (€)")
+hist(Imp200$Importo, main="Istogramma Importo",ylab="N°Vendite", xlab="Incasso (€)")
 ```
+L'istogramma di frequenza mostra che la variabile Importo non assume la determinazione di una normale.
 
-Sia gli istogramma di frequenza, sia i QQ-plot mostrano che le variabili Q.tà e Importo non assumono le determinazioni di una normale.  
-
-## Analisi descrittiva bivariata
+## BoxPlot Importi Annui
 
 ```{r echo=FALSE}
 library(readxl)
@@ -92,10 +117,12 @@ plot5 <- ggplot(BP2023, aes(x=Mese, y=Importo)) +
     geom_boxplot(fill="slateblue", alpha=0.2) + 
     xlab("2023") + coord_cartesian(ylim=c(0,40)) +
     scale_x_discrete(limits=ListaMesi)
-grid.arrange(plot1, plot2, plot3, plot4, plot5, nrow=5, top="Mediana degli Importi per Vendita raggruppati Mensilmente")
+grid.arrange(plot1, plot2, plot3, plot4, plot5, nrow=5, top="Boxplot degli Importi per Vendita Raggruppati Mensilmente")
 ```
 
-## Columnplot diviso per anni
+La mancanza di dati di Aprile 2020 è dovuta alla chiusura per il lockdown.
+
+## ColPlot Importi Annui
 
 ```{r echo=FALSE}
 library(readxl)
@@ -133,61 +160,49 @@ plot5 <- ggplot(BP2023, aes(x=Mese, y=Importo)) +
     geom_col(fill="slateblue", alpha=0.2) + 
     xlab("2023") + coord_cartesian(ylim=c(0,12500)) +
     scale_x_discrete(limits=ListaMesi)
-grid.arrange(plot1, plot2, plot3, plot4, plot5, nrow=5, top="Mediana degli Importi per Vendita raggruppati Mensilmente")
+grid.arrange(plot1, plot2, plot3, plot4, plot5, nrow=5, top="Frequenze Cumulate degli Importi per Mese e Anno")
 ```
+  Picchi Settembre, Ottobre e Dicembre : (Scuola e Natale)
+  Depressione Agosto : (Chiusura estiva)
 
-Per una comparazione degli Importi mensili nei vari anni è stato realizzato un grafico a barre 
-
-## areaplot totale per Q.tà
-
-```{r echo=FALSE}
-library(readxl)
-TotSum <- read_excel("D:/Data Science/Progetto/Data/tabella 8.xlsx", 
-    sheet = "tab1 tutto")
-ggplot(data = TotSum, aes(x = Mese_Anno, y = Q.tà,)) +
-  geom_area() + ggtitle("Quantità articoli venduti per mese nel periodo di osservazione") +
-  xlab("Mesi") + ylab("N°Articoli") 
-```
-
-## areaplot totale per Importo
+## Areaplot Totale per Importo
 
 ```{r echo=FALSE}
 library(readxl)
 TotSum <- read_excel("D:/Data Science/Progetto/Data/tabella 8.xlsx", 
     sheet = "tab1 tutto")
 ggplot(data = TotSum, aes(x = Mese_Anno, y = Fatturato)) + 
-   geom_area() + ggtitle("Importi  articoli venduti per mese nel periodo di osservazione") + 
+   geom_area() + ggtitle("Importi  Articoli Venduti per Mese nel Periodo di Osservazione") + 
    xlab("Mesi") + ylab("Importo in Euro")  
 ```
 
-In entrambi i grafici si evidenzia una andamento non lineare; essendo i dati a cadenza mensile, in essi è presente il fenomeno denominato stagionalità. 
+Il grafico evidenzia un andamento non lineare e presenta un pattern stagionale
 
-##  Andamenti tipici delle serie storiche 
+## Confronto Indici di Posizione Accessori/Strumenti
 
-Dai grafici deduciamo che le serie storiche possono avere diversi pattern. 
-
- * Pattern stagionale: fluttuazioni dovute al particolare periodo dell’anno. 
- * Pattern ciclico: movimenti ricorrenti di lunga durata. 
- * Trend o tendenza di fondo.  
-
-##  Confronto Q.tà Libri/Strumenti 
-
+Accessori
 ```{r echo=FALSE, warning=FALSE}
 library(readxl)
-CattPezz <- read_excel("D:/Data Science/Progetto/Data/FattCattPezz.xlsx", 
-    sheet = "tab3 pezzi")
-ggplot(CattPezz,aes(x=Mese_Anno),) +
-  geom_line(aes(y = LIBRI, color = "Libri")) +
-  geom_line(aes(y = STRUMENTI_MUSICALI, color ="Strumenti")) + 
-  ggtitle("Confronto tra Libri e Strumenti Musicali in N°Articoli") + 
-   xlab("Mesi") + ylab("N°Articoli") +
-  scale_colour_manual(name="Categorie",
-      values=c(Libri="blue2", Strumenti="green4")) 
+Strumenti <- read_excel("D:/Data Science/Progetto/Data/Fatturato Per Mese.xlsx", 
+    sheet = "tabella 7 STRUMENTI")
+Accessori <- read_excel("D:/Data Science/Progetto/Data/Fatturato Per Mese.xlsx", 
+    sheet = "tabella 3 ACCESSORI")
+summary(Accessori$Q.tà)
+summary(Accessori$Fatturato)
 ```
 
-Le due serie hanno un andamento quasi sovrapponibile.  
+Strumenti
+```{r echo=FALSE, warning=FALSE}
+library(readxl)
+Strumenti <- read_excel("D:/Data Science/Progetto/Data/Fatturato Per Mese.xlsx", 
+    sheet = "tabella 7 STRUMENTI")
+Accessori <- read_excel("D:/Data Science/Progetto/Data/Fatturato Per Mese.xlsx", 
+    sheet = "tabella 3 ACCESSORI")
+summary(Strumenti$Q.tà)
+summary(Strumenti$Fatturato)
+```
 
-## Cosnfronto Q.tà Accessori//Strumenti 
+## Confronto Quantità Accessori/Strumenti
 
 ```{r echo=FALSE, warning=FALSE}
 library(readxl)
@@ -202,7 +217,24 @@ ggplot(CattPezz, aes(x=Mese_Anno)) +
       values=c(Accessori="red2", Strumenti="green4")) 
 ```
 
-## Confronto Q.tà Liuteria/Strumenti 
+## Confronto Quantità Libri/Strumenti
+
+```{r echo=FALSE, warning=FALSE}
+library(readxl)
+CattPezz <- read_excel("D:/Data Science/Progetto/Data/FattCattPezz.xlsx", 
+    sheet = "tab3 pezzi")
+ggplot(CattPezz,aes(x=Mese_Anno),) +
+  geom_line(aes(y = LIBRI, color = "Libri")) +
+  geom_line(aes(y = STRUMENTI_MUSICALI, color ="Strumenti")) + 
+  ggtitle("Confronto tra Libri e Strumenti Musicali in N°Articoli") + 
+   xlab("Mesi") + ylab("N°Articoli") +
+  scale_colour_manual(name="Categorie",
+      values=c(Libri="blue2", Strumenti="green4")) 
+```
+
+Si nota una correlazione tra le vendite mensili di libri e strumenti.
+
+## Confronto Quantità Liuteria/Strumenti
 
 ```{r echo=FALSE, warning=FALSE}
 library(readxl)
@@ -217,10 +249,10 @@ ggplot(CattPezz, aes(x=Mese_Anno)) +
       values=c(Liuteria="orange2", Strumenti="green4"))
 ```
 
-La serie Liuteria ha un pattern stagionale, ma anche un pattern ciclico.  
+La serie Liuteria ha un pattern stagionale, ma anche un pattern ciclico.
 
-## Confronto Q.tà 5 Categorie
-Analizzo ora le 5 voci della variabile Categoria: 
+## Confronto Quantità per Categoria
+
 ```{r echo=FALSE, warning=FALSE}
 library(readxl)
 CattPezz <- read_excel("D:/Data Science/Progetto/Data/FattCattPezz.xlsx", 
@@ -231,14 +263,14 @@ ggplot(CattPezz, aes(x=Mese_Anno)) +
   geom_line(aes(y = LIBRI, color = "Libri")) +
   geom_line(aes(y = LIUTERIA, color = "Liuteria")) +
   geom_line(aes(y = STRUMENTI_MUSICALI, color ="Strumenti")) + 
-  ggtitle("Quantità vendite distinto per serie") + 
+  ggtitle("Quantità Vendite Distinta per Categoria") + 
    xlab("Mesi") + ylab("N°Articoli") +
    scale_colour_manual(name="Categorie",
       values=c(Accessori="red2", Audio="magenta", 
               Libri="blue2", Liuteria="orange2", Strumenti="green4"))
 ```
 
-## Confronto Importo 5 Categorie
+## Confronto Importo per Categoria
 
 ```{r echo=FALSE, warning=FALSE}
 library(readxl)
@@ -250,16 +282,17 @@ ggplot(FattCatt, aes(x=Mese_Anno)) +
   geom_line(aes(y = LIBRI, color = "Libri")) +
   geom_line(aes(y = LIUTERIA, color = "Liuteria")) +
   geom_line(aes(y = STRUMENTI_MUSICALI, color ="Strumenti")) +
-  ggtitle("Importo vendite distinto per serie") + 
+  ggtitle("Importo Vendite Distinto per Categoria") + 
    xlab("Mesi") + ylab("Importo in Euro") +
    scale_colour_manual(name="Categorie",
       values=c(Accessori="red2", Audio="magenta", 
               Libri="blue2", Liuteria="orange2", Strumenti="green4"))
 ```
 
-## Confornto Importo per Anno
+## Andamento Importo Annuo
 
 ```{r echo=FALSE, warning=FALSE}
+library(ggplot2)
 Mesi <- c("Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio","Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre")
 Ddn <- c(6133.42, 5686.50, 6477.32, 3672.00, 5481.50, 6336.50, 3812.50, 776.50, 5165.50, 8903.50, 6437.50, 12396.00)
 Dv <- c(5555.80, 4958.00, 552.00, 0.00, 3506.00, 5656.50, 5335.50, 2746.00, 7138.50, 11137.00, 1144.00, 8676.00)
@@ -274,18 +307,25 @@ ggplot(IA, aes(x=Mesi, group=1)) +
   geom_line(aes(y = Dvu, color = "2021")) +
   geom_line(aes(y = Dvd, color = "2022")) +
   geom_line(aes(y = Dvt, color ="2023")) +
-  ggtitle("Importo vendite distinto per anno") + 
+  ggtitle("Importo Vendite Distinto per Anno") + 
    xlab("Mesi") + ylab("Importo in Euro") + scale_x_discrete(limits=ListaMesi) + ylim(0,12500) + scale_colour_manual(name="Anni",
       values=c("2019"="black", "2020"="red2", "2021"="blue2", "2022"="orange2", "2023"="green2"))
 ```
 
+   Si rileva la stagionalità negli anni.
+
 ## Conclusioni
 
-La mia analisi ha evidenziato che serie storiche delle variabili Q.tà e Fatturato presentano una combinazione di diversi pattern delle vendite. 
+La serie Liuteria è un esempio di pattern ciclico.
 
-Abbiamo visto che i grafici delle serie storiche delle variabili Q.tà e Fatturato presentano delle punte nei mesi 12, 24, 36 e 48 (dicembre - Festività Natalizie), delle punte leggermente più basse nei mesi 5, 17, 29, 41, 53 (maggio – Comunioni e Cresime) e delle cadute nei mesi 8, 20, 32, 44 (chiusura parziale del mese di agosto). E’ evidente la stagionalità.   
-
-La serie Liuteria è un esempio di pattern ciclico. Si vede che l’ampiezza delle oscillazioni cicliche è generalmente più grande di quella dovuta alla stagionalità. 
-
+I grafici delle serie storiche delle variabili Quantità e Fatturato:
  
-Grazie dell’attenzione. 
+ * Picchi elevati nel mese di Dicembre (festività Natalizie)
+ * Picchi elevati nei mesi di Settembre e Ottobre (riapertura scuola)
+ * Picchi minori nei mesi di Maggio e Giugno (Comunioni e Cresime)
+ * Depressioni nel mese di Agosto (chiusura negozio) 
+
+E' evidente la stagionalità.
+
+
+
