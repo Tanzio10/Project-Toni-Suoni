@@ -41,18 +41,22 @@ Dvt <- c(6196.00, 6218.00, 4661.50, 4394.00, 3441.00, -10000, -10000, -10000, -1
 IA <- data.frame(Mesi, Ddn, Dv, Dvu, Dvd, Dvt)
 print(IA)
 ListaMesi <- c("Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre")
+Imp200 <- Fatturato[which(Fatturato$Importo <= 100),]
+Imp35 <- Fatturato[which(Fatturato$Q.tà <= 5),]
 
 str(Fatturato)
 summary(Fatturato)
 
-#Istogramma e QQplot variabile Q.tà 
+#Istogramma e QQplot variabile Quantità 
 par(mfrow=c(1,2))
-hist(Fatturato$Q.tà, main="Istogramma Q.tà", xlab="N°Articoli per Vendita", ylab="N°Vendite")
+hist(Fatturato$Q.tà, main="Istogramma Quantità", xlab="N°Articoli per Vendita", ylab="N°Vendite")
+hist(Imp35$Q.tà, main="Istogramma Quantità", xlab="N°Articoli per Vendita", ylab="N°Vendite")
 qqnorm(Fatturato$Q.tà, main="Q-Q Plot Q.tà", ylab="N°Articoli per Vendità", xlab="Quantili")
 
 #Istogramma e QQplot variabile Importo
 par(mfrow=c(1,2))
 hist(Fatturato$Importo, main="Istogramma Importo",ylab="N°Vendite", xlab="Importo per Vendità in Euro")
+hist(Imp200$Importo, main="Istogramma Importo",ylab="N°Vendite", xlab="Importo per Vendità in Euro")
 qqnorm(Fatturato$Importo, main="Q-Q Plot Importo", ylab="Importo per Vendità in Euro", xlab="Quantili")
 
 #Barplot diviso per anni
@@ -175,6 +179,9 @@ ggplot(IA, aes(x=Mesi, group=1)) +
    xlab("Mesi") + ylab("Importo in Euro") + scale_x_discrete(limits=ListaMesi) + ylim(0,12500) + scale_colour_manual(name="Anni",
       values=c("2019"="black", "2020"="red2", "2021"="blue2", "2022"="orange2", "2023"="green2"))
    
+            
+
+
             
 
 
