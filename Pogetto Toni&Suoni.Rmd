@@ -160,7 +160,7 @@ plot5 <- ggplot(BP2023, aes(x=Mese, y=Importo)) +
     geom_col(fill="slateblue", alpha=0.2) + 
     xlab("2023") + coord_cartesian(ylim=c(0,12500)) +
     scale_x_discrete(limits=ListaMesi)
-grid.arrange(plot1, plot2, plot3, plot4, plot5, nrow=5, top="Somma degli Importi per Mese e Anno")
+grid.arrange(plot1, plot2, plot3, plot4, plot5, nrow=5, top="Importi per Mese e Anno")
 ```
   Picchi Settembre, Ottobre e Dicembre : (Scuola e Natale)
   Depressione Agosto : (Chiusura estiva)
